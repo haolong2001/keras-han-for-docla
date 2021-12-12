@@ -122,9 +122,7 @@ class HAN(Model):
             AttentionLayer(), name='word_attention'
         )(word_rep)
 
-        sentence_rep_temp = AttentionLayer(
-             name='word_attention_temp'
-        )(word_rep)
+        sentence_summary = AttentionLayer(name='word_attention_temp')(word_rep)
 
         doc_rep = self.build_sentence_encoder(
             self.max_sentences, self.word_encoding_dim, self.sentence_encoding_dim
@@ -202,8 +200,8 @@ class HAN(Model):
         # Create a temporary dummy layer to hold the
         # attention weights tensor
 
-        dummy_layer = Lambda(
+        dummy2_layer = Lambda(
             lambda x: att_layer._get_attention_weights(x)
         )(prev_tensor)
 
-        return Model(self.input, dummy_layer).predict(X)
+        return Model(self.input, dummy2_layer).predict(X)
