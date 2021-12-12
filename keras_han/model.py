@@ -122,7 +122,7 @@ class HAN(Model):
             AttentionLayer(), name='word_attention'
         )(word_rep)
 
-        sentence_summary = AttentionLayer(name='word_attention_temp')(word_rep)
+        # sentence_summary = AttentionLayer(name='word_attention_temp')(word_rep)
 
         doc_rep = self.build_sentence_encoder(
             self.max_sentences, self.word_encoding_dim, self.sentence_encoding_dim
@@ -135,6 +135,9 @@ class HAN(Model):
         out_tensor = Dense(
             self.output_size, activation='softmax', name='class_prediction'
         )(doc_summary)
+
+        print(word_rep.shape.as_list())
+        print(doc_rep.shape.as_list())
 
         return in_tensor, out_tensor
 
