@@ -115,6 +115,10 @@ class HAN(Model):
             word_encoder, name='word_encoder'
         )(in_tensor)
 
+        word_rep_temp = AttentionLayer(
+             name='word_encoder'
+        )(in_tensor)
+
         # Sentence Rep is a 3d-tensor (batch_size, max_sentences, word_encoding_dim)
         sentence_rep = TimeDistributed(
             AttentionLayer(), name='word_attention'
