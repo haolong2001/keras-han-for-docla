@@ -122,8 +122,8 @@ class HAN(Model):
             AttentionLayer(), name='word_attention'
         )(word_rep)
 
-        sentence_rep_temp = TimeDistributed(
-            AttentionLayer(), name='word_attention_temp'
+        sentence_rep_temp = AttentionLayer(
+             name='word_attention_temp'
         )(word_rep)
 
         doc_rep = self.build_sentence_encoder(
