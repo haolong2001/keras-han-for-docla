@@ -181,3 +181,23 @@ class HAN(Model):
         )(prev_tensor)
 
         return Model(self.input, dummy_layer).predict(X)
+
+    def predict_word_attention(self, X):
+        """
+                For a given set of texts predict the attention
+                weights for each word.
+                :param X: 3d-tensor, similar to the input for predict
+                :return: 2d array (num_obs, max_sentences) containing
+                    the attention weights for each sentence
+        """
+        att_layer = self.get_layer('word_attention')
+        prev_tensor = att_layer.input
+
+        # Create a temporary dummy layer to hold the
+        # attention weights tensor
+
+        dummy_layer = Lambda(
+            lambda x: att_layer._get_attention_weights(x)
+        )(prev_tensor)
+
+        return Model(self.input, dummy_layer).predict(X)
