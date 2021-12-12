@@ -115,13 +115,15 @@ class HAN(Model):
             word_encoder, name='word_encoder'
         )(in_tensor)
 
-        word_rep_temp = AttentionLayer(
-             name='word_encoder'
-        )(in_tensor)
+
 
         # Sentence Rep is a 3d-tensor (batch_size, max_sentences, word_encoding_dim)
         sentence_rep = TimeDistributed(
             AttentionLayer(), name='word_attention'
+        )(word_rep)
+
+        sentence_rep_temp = TimeDistributed(
+            AttentionLayer(), name='word_attention_temp'
         )(word_rep)
 
         doc_rep = self.build_sentence_encoder(
@@ -194,7 +196,7 @@ class HAN(Model):
                 :return: 2d array (num_obs, max_sentences) containing
                     the attention weights for each sentence
         """
-        att_layer = self.get_layer('word_attention')
+        att_layer = self.get_layer('word_attention_temp')
         prev_tensor = att_layer.input
 
         # Create a temporary dummy layer to hold the
