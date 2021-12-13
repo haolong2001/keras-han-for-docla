@@ -205,20 +205,39 @@ class HAN(Model):
                 :return: 3d array (num_obs, max_words max_sentences) containing
                     the attention weights for each sentence
         """
-
-
         att_layer = self.get_layer('word_attention')
-        prev_tensor = att_layer.input # 15*100 *100
 
-        dummy_layer = Lambda(
-            lambda x: att_layer._get_attention_weights(x)
+        prev_tensor = att_layer.input  # 15*100 *100
+
+        ls = []
+        print(prev_tensor.shape.as_list())
+        a, b, c, d = prev_tensor.shape.as_list()
+
+
+
+        
+
+        layer = AttentionLayer(name='temp')
+
+        dummy2_layer = Lambda(
+            lambda x: layer._get_attention_weights(x)
         )
-
-        dummy_2layer = TimeDistributed(
-            dummy_layer, name='temp'
+        print('ok3')
+        dummy3_layer = TimeDistributed(
+            dummy2_layer
         )(prev_tensor)
 
-        return Model(self.input, dummy_2layer).predict(X)
+        return Model(self.input, dummy3_layer).predict(X)
+
+
+
+
+
+
+
+
+        return ls
+
 
 
 
