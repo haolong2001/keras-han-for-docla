@@ -4,6 +4,7 @@ from keras.layers import (
 )
 from keras.models import Model
 from keras_han.layers import AttentionLayer
+from keras import backend as K
 import tensorflow as tf
 import numpy as np
 
