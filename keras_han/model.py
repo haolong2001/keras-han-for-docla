@@ -245,7 +245,7 @@ class HAN(Model):
                 lambda x: layer._get_attention_weights(x)
             )(temp_tensor)
 
-            temp_result = Model(Input(), dummy2_layer).predict(temp_tensor) # word encoder
+            temp_result = Model(self.get_layer('word_encoder'), dummy2_layer).predict(temp_tensor) # word encoder
 
 
             ls.append(temp_result)
