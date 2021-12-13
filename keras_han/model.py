@@ -200,11 +200,11 @@ class HAN(Model):
                 :return: 3d array (num_obs, max_words max_sentences) containing
                     the attention weights for each sentence
         """
-        encoder_layer = self.get_layer('word_encoder') # none *15*100 *100 input
+        encoder_word = self.get_layer('word_encoder').outputs # none *15*100 *100 input
 
         tf.compat.v1.disable_eager_execution()
         session = tf.compat.v1.Session()
-        array = encoder_layer.eval(session=session)
+        array = encoder_word.eval(session=session)
 
         # get the result from the word encoder layer
 
@@ -213,7 +213,7 @@ class HAN(Model):
 
         # slicing the array
         ls = []
-        a,b,c = encoder_layer.output.shape.as_list()
+        a,b,c = encoder_word.output.shape.as_list()
         for i in range(c):
             temp = array[::,i]
             temp_tensor = tf.convert_to_tensor (array, tf.float32, name='temp_tensor')
