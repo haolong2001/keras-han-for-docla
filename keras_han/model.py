@@ -216,10 +216,12 @@ class HAN(Model):
 
         print(b)
         print("ok1")
-        for i in range(d):
+        for i in range(1):
 
 
             temp_tensor = tf.slice(prev_tensor, [0, 0, 0,i], [32,b,c,i])
+
+            print(temp_tensor)
             temp_sentence_rep = AttentionLayer()(temp_tensor)
 
             print("ok2")
@@ -231,7 +233,7 @@ class HAN(Model):
             )(temp_tensor)
 
 
-            print("ok")
+            print("ok3")
             temp_result = Model(self.input, dummy2_layer).predict(X)
 
             ls.append(temp_result)
