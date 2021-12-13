@@ -216,7 +216,12 @@ class HAN(Model):
 
         print(b)
         print("ok1")
-        for i in range(1):
+
+        temp_tensor = tf.slice(prev_tensor, [0, 0, 0, 1], [32, b, c, 1])
+        print(temp_tensor.shape.as_list())
+        temp_sentence_rep = AttentionLayer()(temp_tensor)
+        print(temp_sentence_rep.shape.as_list())
+        for i in range(d):
 
 
             temp_tensor = tf.slice(prev_tensor, [0, 0, 0,i], [32,b,c,i])
