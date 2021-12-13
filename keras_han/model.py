@@ -219,7 +219,7 @@ class HAN(Model):
         for i in range(d):
 
 
-            temp_tensor = tf.slice(prev_tensor, [0, 0, 0,i], [a,b,c,i])
+            temp_tensor = tf.slice(prev_tensor, [0, 0, 0,i], [32,b,c,i])
             temp_sentence_rep = AttentionLayer()(temp_tensor)
 
             print("ok2")
