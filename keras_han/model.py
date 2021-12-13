@@ -124,7 +124,7 @@ class HAN(Model):
         )(word_rep)
 
 
-        word_rep.as_list()
+
 
 
         doc_rep = self.build_sentence_encoder(
