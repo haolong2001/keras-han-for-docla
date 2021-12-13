@@ -196,25 +196,7 @@ class HAN(Model):
         return Model(self.input, dummy_layer).predict(X)
 
 
-    def _get_attention_weights(self, X):
-        """
-        Computes the attention weights for each timestep in X
-        :param X: 3d-tensor (batch_size, time_steps, input_dim)
-        :return: 2d-tensor (batch_size, time_steps) of attention weights
-        """
-        # Compute a time-wise stimulus, i.e. a stimulus for each
-        # time step. For this first compute a hidden layer of
-        # dimension self.context_vector_length and take the
-        # similarity of this layer with self.u as the stimulus
-        u_tw = K.tanh(K.dot(X, self.W))
-        tw_stimulus = K.dot(u_tw, self.u)
 
-        # Remove the last axis an apply softmax to the stimulus to
-        # get a probability.
-        tw_stimulus = K.reshape(tw_stimulus, (-1, tw_stimulus.shape[1]))
-        att_weights = K.softmax(tw_stimulus)
-
-        return att_weights
     def predict_word_attention(self, X):
         """
                 For a given set of texts predict the attention
@@ -241,17 +223,19 @@ class HAN(Model):
         print("ok1")
 
         temp_tensor = tf.slice(prev_tensor, [0, 0, 0, 1], [32, b, c, 1])
-        temp_tensor =  tf.squeeze(temp_tensor)
+        temp_tensor = tf.squeeze(temp_tensor)
         print(temp_tensor.shape.as_list())
-        print(self._get_attention_weights(temp_tensor)) # print the attention weight
-        ls.append(self._get_attention_weights(temp_tensor))
 
-        temp_sentence_rep = AttentionLayer('temp')(temp_tensor)
+        layer = AttentionLayer(name='temp')
+
+        temp_sentence_rep = layer(temp_tensor)
         print(temp_sentence_rep.shape.as_list())
 
 
+
+
         dummy2_layer = Lambda(
-            lambda x: temp_sentence_rep._get_attention_weights(x)
+            lambda x: layer._get_attention_weights(x)
         )(temp_tensor)
         print("ok34")
         temp_result = Model(self.input, dummy2_layer).predict(X)
