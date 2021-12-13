@@ -211,7 +211,7 @@ class HAN(Model):
 
         # slicing the array
         ls = []
-        a,b,c,d = prev_tensor.output.shape.as_list()
+        a,b,c,d = prev_tensor.shape.as_list()
         print(a)
         print(b)
         print("ok1")
