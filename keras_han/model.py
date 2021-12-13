@@ -192,7 +192,7 @@ class HAN(Model):
         )(prev_tensor)
         print(prev_tensor.shape.as_list())
 
-
+        print (Model(self.input, dummy_layer).predict(X).shape)
         return Model(self.input, dummy_layer).predict(X)
 
 
@@ -219,32 +219,26 @@ class HAN(Model):
         print(prev_tensor.shape.as_list())
         a,b,c,d = prev_tensor.shape.as_list()
 
-        print(b)
-        print("ok1")
+        for i in range (d):
+            temp_tensor = tf.slice(prev_tensor, [0, 0, 0, i], [16, b, c, i])
+            temp_tensor = tf.squeeze(temp_tensor)
+            layer = AttentionLayer(name='temp')
+            temp_sentence_rep = layer(temp_tensor)
+            dummy2_layer = Lambda(
+                lambda x: layer._get_attention_weights(x)
+            )(temp_tensor)
+            temp_result = Model(self.input, dummy2_layer).predict(X)
+            ls.append(temp_result)
 
-        temp_tensor = tf.slice(prev_tensor, [0, 0, 0, 1], [16, b, c, 1])
-        temp_tensor = tf.squeeze(temp_tensor)
-        print(temp_tensor.shape.as_list())
-
-        layer = AttentionLayer(name='temp')
-
-        temp_sentence_rep = layer(temp_tensor)
-        print(temp_sentence_rep.shape.as_list())
-
-
-
-
-        dummy2_layer = Lambda(
-            lambda x: layer._get_attention_weights(x)
-        )(temp_tensor)
-        print("ok34")
-        temp_result = Model(self.input, dummy2_layer).predict(X)
-        print(temp_result)
+        return ls
 
 
 
 
-        return temp_result
+
+
+
+
 
 
 
