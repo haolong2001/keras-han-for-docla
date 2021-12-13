@@ -242,29 +242,9 @@ class HAN(Model):
         print(temp_result)
 
 
-        for i in range(d):
 
 
-            temp_tensor = tf.slice(prev_tensor, [0, 0, 0,i], [32,b,c,i])
-
-            print(temp_tensor)
-            temp_sentence_rep = AttentionLayer()(temp_tensor)
-
-            print("ok2")
-
-
-
-            dummy2_layer = Lambda(
-                lambda x: temp_sentence_rep._get_attention_weights(x)
-            )(temp_tensor)
-
-
-            print("ok3")
-            temp_result = Model(self.input, dummy2_layer).predict(X)
-
-            ls.append(temp_result)
-
-        return np.arrays(ls)
+        return temp_result
 
 
 
