@@ -189,6 +189,8 @@ class HAN(Model):
         dummy_layer = Lambda(
             lambda x: att_layer._get_attention_weights(x)
         )(prev_tensor)
+        print(prev_tensor.shape.as_list())
+
 
         return Model(self.input, dummy_layer).predict(X)
 
@@ -217,7 +219,7 @@ class HAN(Model):
         print(b)
         print("ok1")
 
-        temp_tensor = tf.slice(prev_tensor, [0, 0, 0, 1], [32, b, c, 1])
+        temp_tensor = tf.slice(prev_tensor, [0, 0, 0, 1], [, b, c, 1]).squeeze()
         print(temp_tensor.shape.as_list())
         temp_sentence_rep = AttentionLayer()(temp_tensor)
         print(temp_sentence_rep.shape.as_list())
