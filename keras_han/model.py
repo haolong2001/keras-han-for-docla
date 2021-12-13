@@ -222,7 +222,7 @@ class HAN(Model):
         print(b)
         print("ok1")
 
-        temp_tensor = tf.slice(prev_tensor, [0, 0, 0, 1], [32, b, c, 1])
+        temp_tensor = tf.slice(prev_tensor, [0, 0, 0, 1], [16, b, c, 1])
         temp_tensor = tf.squeeze(temp_tensor)
         print(temp_tensor.shape.as_list())
 
