@@ -215,7 +215,7 @@ class HAN(Model):
 
 
 
-        
+
 
         layer = AttentionLayer(name='temp')
 
@@ -236,7 +236,7 @@ class HAN(Model):
 
 
 
-        return ls
+       
 
 
 
