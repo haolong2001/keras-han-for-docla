@@ -221,6 +221,14 @@ class HAN(Model):
         print(temp_tensor.shape.as_list())
         temp_sentence_rep = AttentionLayer()(temp_tensor)
         print(temp_sentence_rep.shape.as_list())
+        dummy2_layer = Lambda(
+            lambda x: temp_sentence_rep._get_attention_weights(x)
+        )(temp_tensor)
+        print("ok34")
+        temp_result = Model(self.input, dummy2_layer).predict(X)
+        print(temp_result)
+
+
         for i in range(d):
 
 
