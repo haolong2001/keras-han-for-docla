@@ -212,21 +212,23 @@ class HAN(Model):
 
         # get the result from the word encoder layer
 
-
-
-
         # slicing the array
         ls = []
         a,b,c,d = prev_tensor.output.shape.as_list()
         for i in range(d):
-            temp = array[::,i]
-            temp_tensor = tf.convert_to_tensor(array, tf.float32, name='temp_tensor')
+
+            
+            temp_tensor = tf.slice(prev_tensor, [0, 0, 0,i], [a,b,c,i])
             temp_sentence_rep = AttentionLayer()(temp_tensor)
+
+
           #
             dummy2_layer = Lambda(
                 lambda x: temp_sentence_rep._get_attention_weights(x)
             )(temp_tensor)
 
+
+            print("ok")
             temp_result = Model(temp_tensor, dummy2_layer).predict(X)
 
             ls.append(temp_result.eval(session=session))
