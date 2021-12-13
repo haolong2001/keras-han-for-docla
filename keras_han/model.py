@@ -202,7 +202,7 @@ class HAN(Model):
         """
 
 
-        att_layer = self.get_layer('sentence_attention')
+        att_layer = self.get_layer('word_attention')
         prev_tensor = att_layer.input # 15*100 *100
 
         # chai kai
@@ -212,7 +212,7 @@ class HAN(Model):
         # slicing the array
         ls = []
         print(prev_tensor.shape.as_list())
-        b,c,d = prev_tensor.shape.as_list()
+        a,b,c,d = prev_tensor.shape.as_list()
 
         print(b)
         print("ok1")
