@@ -4,7 +4,8 @@ from keras.layers import (
 )
 from keras.models import Model
 from keras_han.layers import AttentionLayer
-
+import tensorflow as tf
+import numpy as np
 
 class HAN(Model):
     def __init__(
@@ -122,7 +123,9 @@ class HAN(Model):
             AttentionLayer(), name='word_attention'
         )(word_rep)
 
-        # sentence_summary = AttentionLayer(name='word_attention_temp')(word_rep)
+
+        word_rep.as_list()
+
 
         doc_rep = self.build_sentence_encoder(
             self.max_sentences, self.word_encoding_dim, self.sentence_encoding_dim
@@ -194,17 +197,38 @@ class HAN(Model):
                 For a given set of texts predict the attention
                 weights for each word.
                 :param X: 3d-tensor, similar to the input for predict
-                :return: 2d array (num_obs, max_sentences) containing
+                :return: 3d array (num_obs, max_words max_sentences) containing
                     the attention weights for each sentence
         """
-        att_layer = self.get_layer('word_attention_temp')
-        prev_tensor = att_layer.input
+        encoder_layer = self.get_layer('word_encoder') # none *15*100 *100 input
 
-        # Create a temporary dummy layer to hold the
-        # attention weights tensor
+        tf.compat.v1.disable_eager_execution()
+        session = tf.compat.v1.Session()
+        array = encoder_layer.eval(session=session)
 
-        dummy2_layer = Lambda(
-            lambda x: att_layer._get_attention_weights(x)
-        )(prev_tensor)
+        # get the result from the word encoder layer
 
-        return Model(self.input, dummy2_layer).predict(X)
+
+
+
+        # slicing the array
+        ls = []
+        a,b,c = encoder_layer.output.shape.as_list()
+        for i in range(c):
+            temp = array[::,i]
+            temp_tensor = tf.convert_to_tensor (array, tf.float32, name='temp_tensor')
+            temp_sentence_rep = AttentionLayer()(temp_tensor)
+
+            dummy2_layer = Lambda(
+                lambda x: temp_sentence_rep._get_attention_weights(x)
+            )(temp_tensor)
+            temp_result = Model(self.input, dummy2_layer).predict(X)
+
+            ls.append(temp_result.eval(session=session))
+
+        return np.arrays(ls)
+
+
+
+
+
