@@ -201,37 +201,39 @@ class HAN(Model):
                     the attention weights for each sentence
         """
 
+
         att_layer = self.get_layer('sentence_attention')
         prev_tensor = att_layer.input # 15*100 *100
 
         # chai kai
-
-        tf.compat.v1.disable_eager_execution()
-        session = tf.compat.v1.Session()
-        array = prev_tensor.eval(session=session)
 
         # get the result from the word encoder layer
 
         # slicing the array
         ls = []
         a,b,c,d = prev_tensor.output.shape.as_list()
+        print(a)
+        print(b)
+        print("ok1")
         for i in range(d):
 
-            
+
             temp_tensor = tf.slice(prev_tensor, [0, 0, 0,i], [a,b,c,i])
             temp_sentence_rep = AttentionLayer()(temp_tensor)
 
+            print("ok2")
 
-          #
+
+
             dummy2_layer = Lambda(
                 lambda x: temp_sentence_rep._get_attention_weights(x)
             )(temp_tensor)
 
 
             print("ok")
-            temp_result = Model(temp_tensor, dummy2_layer).predict(X)
+            temp_result = Model(self.input, dummy2_layer).predict(X)
 
-            ls.append(temp_result.eval(session=session))
+            ls.append(temp_result)
 
         return np.arrays(ls)
 
