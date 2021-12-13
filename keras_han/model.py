@@ -206,16 +206,23 @@ class HAN(Model):
                     the attention weights for each sentence
         """
 
-        tensor = Model(self.input, self.get_layer('word_encoder')).predict(X)
+
+
         att_layer = self.get_layer('word_attention')
 
         prev_tensor = att_layer.input  # 15*100 *100
+
+        dummy_layer = Lambda(
+            lambda x: x
+        )(prev_tensor)
+        tensor = Model(self.input, dummy_layer).predict(X)
+
 
         ls = []
         print(prev_tensor.shape.as_list())
         a, b, c, d = prev_tensor.shape.as_list()
 
-
+        print('ok2')
         for i in range(d):
             temp_tensor = tf.slice(prev_tensor, [0, 0, 0, i], [16, b, c, 1])
             temp_tensor = tf.squeeze(temp_tensor)
@@ -225,11 +232,13 @@ class HAN(Model):
 
             dummy2_layer = Lambda(
                 lambda x: layer._get_attention_weights(x)
-            )
-
+            )(temp_tensor)
+            print('ok4')
             temp_result = Model(self.get_layer('word_encoder'), dummy2_layer).predict(tensor)  # word encoder
-
+            print('ok5')
             ls.append(temp_result)
+
+        print('ok5')
 
         return ls
 
