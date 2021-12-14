@@ -227,7 +227,7 @@ class HAN(Model):
 
         print('ok2')
         for i in range(d):
-            temp_tensor = tf.slice(prev_tensor, [0, 0, 0, i], [16, b, c, 1])
+            temp_tensor = tf.slice(prev_tensor, [0, 0, 0, i], [16, b, c, 1]) # word batch
             temp_tensor = tf.squeeze(temp_tensor)
 
             layer = AttentionLayer(name = 'temp')
@@ -237,13 +237,14 @@ class HAN(Model):
                 lambda x: layer._get_attention_weights(x)
             )(temp_tensor)
             print('ok4')
-            temp_result = Model(self.get_layer('word_encoder'), dummy2_layer).predict(tensor)  # word encoder
+            temp_result = Model(inputs=Input(), output = dummy2_layer).predict(tensor)  # word encoder
             print('ok5')
             ls.append(temp_result)
 
         print('ok5')
 
         return ls
+
 
 
 
