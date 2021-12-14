@@ -230,8 +230,8 @@ class HAN(Model):
             temp_tensor = tf.slice(prev_tensor, [0, 0, 0, i], [16, b, c, 1]) # word batch
             temp_tensor = tf.squeeze(temp_tensor)
 
-            input_tensor = tf.slice(prev_tensor, [0, 0, 0, i], [16, b, c, 1])  # word batch
-            input_tensor = tf.squeeze(temp_tensor)
+            input_tensor = tf.slice(tensor, [0, 0, 0, i], [16, b, c, 1])  # word batch
+            input_tensor = tf.squeeze(input_tensor)
 
             layer = AttentionLayer(name = 'temp')
             sentence = layer(temp_tensor)
