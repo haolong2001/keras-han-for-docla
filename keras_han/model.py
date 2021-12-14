@@ -215,7 +215,7 @@ class HAN(Model):
         prev_tensor = att_layer.input  # 15*100 *100
 
 
-        tensor = Model(inputs = self.input, output = self.get_layer('word_encoder')).predict(X)
+        tensor = Model(inputs = self.input, outputs = self.get_layer('word_encoder')).predict(X)
 
 
         ls = []
