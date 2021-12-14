@@ -240,7 +240,7 @@ class HAN(Model):
                 lambda x: layer._get_attention_weights(x)
             )(temp_tensor)
             print('ok4')
-            temp_result = Model(inputs=Input(tensor = temp_tensor), outputs = dummy2_layer).predict(input_tensor)  # word encoder
+            temp_result = Model(inputs=Input(tensor = temp_tensor), outputs = dummy2_layer).predict(input_tensor, step =16)  # word encoder
             print('ok5')
             print(type(temp_result))
             ls.append(temp_result)
