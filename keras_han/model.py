@@ -193,11 +193,12 @@ class HAN(Model):
         )(prev_tensor)
         print(prev_tensor.shape.as_list())
 
-        print (Model(self.input, dummy_layer).predict(X).shape)
+
+
         return Model(self.input, dummy_layer).predict(X)
 
 
-
+    
     def predict_word_attention(self, X):
         """
                 For a given set of texts predict the attention
@@ -207,45 +208,33 @@ class HAN(Model):
                     the attention weights for each word
 
         """
-
-
-
         att_layer = self.get_layer('word_attention')
 
-        prev_tensor = att_layer.input  # 15*100 *100
-
-
-        tensor = Model(inputs = self.input, outputs = self.get_layer('word_encoder').output).predict(X)
-
+        prev_tensor = att_layer.input
 
         ls = []
-        print(prev_tensor.shape.as_list())
+
         a, b, c, d = prev_tensor.shape.as_list()
 
         batch_size = K.shape(prev_tensor)[0]
 
+        att_layer = self.get_layer('word_attention')
 
-        print('ok2')
-        for i in range(2):
-            temp_tensor = tf.slice(prev_tensor, [0, 0, 0, i], [16, b, c, 1]) # word batch
+        prev_tensor = att_layer.input
+
+        for i in range(d):
+            temp_tensor = tf.slice(prev_tensor, [0, 0, 0, i], [batch_size, b, c, 1])  # word batch
             temp_tensor = tf.squeeze(temp_tensor)
 
-            input_tensor = tf.slice(tensor, [0, 0, 0, i], [16, b, c, 1])  # word batch
-            input_tensor = tf.squeeze(input_tensor)
-
-            layer = AttentionLayer(name = 'temp')
+            layer = AttentionLayer(name='temp')
             sentence = layer(temp_tensor)
 
             dummy2_layer = Lambda(
                 lambda x: layer._get_attention_weights(x)
             )(temp_tensor)
-            print('ok4')
-            temp_result = Model(inputs=Input(tensor = temp_tensor), outputs = dummy2_layer).predict(input_tensor, steps =1)  # word encoder
-            print('ok5')
-            print(type(temp_result))
-            ls.append(temp_result)
 
-        print('ok5')
+            temp_result = Model(self.input, dummy2_layer).predict(X)  # word encoder
+            ls.append(temp_result)
 
         return ls
 
