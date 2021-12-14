@@ -227,7 +227,7 @@ class HAN(Model):
 
         print('ok2')
         for i in range(d):
-            temp_tensor = tf.slice(prev_tensor, [0, 0, 0, i], [batch_size, b, c, 1])
+            temp_tensor = tf.slice(prev_tensor, [0, 0, 0, i], [16, b, c, 1])
             temp_tensor = tf.squeeze(temp_tensor)
 
             layer = AttentionLayer(name = 'temp')
