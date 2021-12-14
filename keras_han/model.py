@@ -9,6 +9,7 @@ import tensorflow as tf
 import numpy as np
 
 class HAN(Model):
+
     def __init__(
             self, max_words, max_sentences, output_size,
             embedding_matrix, word_encoding_dim=200,
@@ -203,7 +204,8 @@ class HAN(Model):
                 weights for each word.
                 :param X: 3d-tensor, similar to the input for predict
                 :return: 3d array (num_obs, max_words max_sentences) containing
-                    the attention weights for each sentence
+                    the attention weights for each word
+
         """
 
 
@@ -212,23 +214,24 @@ class HAN(Model):
 
         prev_tensor = att_layer.input  # 15*100 *100
 
-        dummy_layer = Lambda(
-            lambda x: x
-        )(prev_tensor)
-        tensor = Model(self.input, dummy_layer).predict(X)
+
+        tensor = Model(self.input, self.get_layer('word_encoder')).predict(X)
 
 
         ls = []
         print(prev_tensor.shape.as_list())
         a, b, c, d = prev_tensor.shape.as_list()
 
+        batch_size = K.shape(prev_tensor)[0]
+
+
         print('ok2')
         for i in range(d):
-            temp_tensor = tf.slice(prev_tensor, [0, 0, 0, i], [16, b, c, 1])
+            temp_tensor = tf.slice(prev_tensor, [0, 0, 0, i], [batch_size, b, c, 1])
             temp_tensor = tf.squeeze(temp_tensor)
 
             layer = AttentionLayer(name = 'temp')
-            sent = layer(temp_tensor)
+            sentence = layer(temp_tensor)
 
             dummy2_layer = Lambda(
                 lambda x: layer._get_attention_weights(x)
