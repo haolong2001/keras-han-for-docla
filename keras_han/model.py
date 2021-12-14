@@ -198,8 +198,8 @@ class HAN(Model):
         return Model(self.input, dummy_layer).predict(X)
 
 
-    
-    def predict_word_attention(self, X):
+
+    def predict_word_attention(self, X, batch_size):
         """
                 For a given set of texts predict the attention
                 weights for each word.
@@ -216,7 +216,7 @@ class HAN(Model):
 
         a, b, c, d = prev_tensor.shape.as_list()
 
-        batch_size = K.shape(prev_tensor)[0]
+
 
         att_layer = self.get_layer('word_attention')
 
