@@ -196,7 +196,7 @@ class HAN(Model):
 
 
 
-    def predict_word_attention(self, X):
+    def predict_word_attention(self, X, batch_size):
         """
                 For a given set of texts predict the attention
                 weights for each word.
@@ -215,7 +215,7 @@ class HAN(Model):
         a, b, c, d = prev_tensor.shape.as_list()
 
         for i in range(d):
-            temp_tensor = tf.slice(prev_tensor, [0, 0, 0, i], [20, b, c, 1])  # word batch
+            temp_tensor = tf.slice(prev_tensor, [0, 0, 0, i], [batch_size, b, c, 1])  # word batch
             temp_tensor = tf.squeeze(temp_tensor)
 
             layer = AttentionLayer(name='temp')
