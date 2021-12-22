@@ -194,23 +194,7 @@ class HAN(Model):
 
         return Model(self.input, dummy_layer).predict(X)
 
-    def predict_sentence_attention(self, X):
-        """
-        For a given set of texts predict the attention
-        weights for each sentence.
-        :param X: 3d-tensor, similar to the input for predict
-        :return: 2d array (num_obs, max_sentences) containing
-            the attention weights for each sentence
-        """
-        att_layer = self.get_layer('word_attention')
-        prev_tensor = att_layer.input
 
-        # Create a temporary dummy layer to hold the
-        # attention weights tensor
-        dummy_layer = Lambda(
-            lambda x: att_layer._get_attention_weights(x)
-        )(prev_tensor)
-        print(prev_tensor.shape.as_list())
 
     def predict_word_attention(self, X):
         """
@@ -230,12 +214,8 @@ class HAN(Model):
 
         a, b, c, d = prev_tensor.shape.as_list()
 
-        att_layer = self.get_layer('word_attention')
-
-        prev_tensor = att_layer.input
-
         for i in range(d):
-            temp_tensor = tf.slice(prev_tensor, [0, 0, 0, i], [tf.batch_size[0], b, c, 1])  # word batch
+            temp_tensor = tf.slice(prev_tensor, [0, 0, 0, i], [tf.shape(prev_tensor)[0], b, c, 1])  # word batch
             temp_tensor = tf.squeeze(temp_tensor)
 
             layer = AttentionLayer(name='temp')
@@ -248,6 +228,10 @@ class HAN(Model):
             temp_result = Model(self.input, dummy2_layer).predict(X)  # word encoder
             ls.append(temp_result)
             ls = np.transpose(ls,(2,0,1))
+
+
+
+
 
         return ls
 
