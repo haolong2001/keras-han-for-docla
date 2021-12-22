@@ -227,7 +227,10 @@ class HAN(Model):
 
             temp_result = Model(self.input, dummy2_layer).predict(X)  # word encoder
             ls.append(temp_result)
-            ls = np.transpose(ls,(2,0,1))
+
+        ls = np.array(ls)
+
+        ls = np.transpose(ls, (2, 0, 1))
 
 
 
