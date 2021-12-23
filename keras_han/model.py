@@ -230,7 +230,9 @@ class HAN(Model):
 
         ls = np.array(ls)
 
-        #ls = np.transpose(ls, (2, 0, 1))
+        print(ls.shape)
+
+        ls = np.transpose(ls, (2, 0, 1))
 
 
 
