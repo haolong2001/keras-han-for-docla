@@ -199,7 +199,7 @@ class HAN(Model):
     def predict_word_attention(self, X, batch_size):
         """
                 For a given set of texts predict the attention
-                weights for each word.
+                weights for each word.56
                 :param X: 3d-tensor, similar to the input for predict
                 :param batch_size: the batch size of the model.
                 :return: 3d array (num_obs, max_words max_sentences) containing
@@ -214,8 +214,8 @@ class HAN(Model):
 
         a, b, c, d = prev_tensor.shape.as_list()
 
-        for i in range(d):
-            temp_tensor = tf.slice(prev_tensor, [0, 0, 0, i], [batch_size, b, c, 1])  # word batch
+        for i in range(b):
+            temp_tensor = tf.slice(prev_tensor, [0, i, 0, 0], [batch_size, 1, c, d])  # word batch
             temp_tensor = tf.squeeze(temp_tensor)
 
             layer = AttentionLayer(name='temp')
@@ -230,7 +230,7 @@ class HAN(Model):
 
         ls = np.array(ls)
 
-        ls = np.transpose(ls, (2, 0, 1))
+        #ls = np.transpose(ls, (2, 0, 1))
 
 
 
